@@ -83,7 +83,7 @@ document.addEventListener('DOMContentLoaded', () => {
             try {
                 // FormSubmit.co AJAX endpoint
                 // Note: The specific email destination is included in the URL.
-                const response = await fetch("https://formsubmit.co/ajax/prakashmanthakulla2012@gmail.com", {
+                const response = await fetch("https://formsubmit.co/ajax/prakashman2012@gmail.com", {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
