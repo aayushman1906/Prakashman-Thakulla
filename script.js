@@ -81,41 +81,30 @@ document.addEventListener('DOMContentLoaded', () => {
             submitBtn.disabled = true;
 
             try {
-                // REPLACE 'YOUR_FORM_ID' WITH YOUR ACTUAL FORMSPREE FORM ID
-                // Example: 'https://formspree.io/f/xyzaabcd'
-                const formId = 'YOUR_FORM_ID';
-
-                if (formId === 'YOUR_FORM_ID') {
-                    alert('Please configure your Formspree Form ID in script.js to send emails.');
-                    throw new Error('Form ID not configured');
-                }
-
-                const response = await fetch(`https://formspree.io/f/${formId}`, {
+                // FormSubmit.co AJAX endpoint
+                // Note: The specific email destination is included in the URL.
+                const response = await fetch("https://formsubmit.co/ajax/prakashmanthakulla2012@gmail.com", {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                         'Accept': 'application/json'
                     },
-                    body: JSON.stringify(data)
+                    body: JSON.stringify({
+                        ...data,
+                        _subject: "New Message from Portfolio Contact Form"
+                    })
                 });
 
                 if (response.ok) {
-                    alert('Message sent successfully! Thank you for contacting me.');
+                    alert('Message sent successfully!');
                     contactForm.reset();
                 } else {
-                    const errorData = await response.json();
-                    if (Object.hasOwn(errorData, 'errors')) {
-                        const errorMessages = errorData.errors.map(error => error.message).join(", ");
-                        alert(`Oops! There was a problem submitting your form: ${errorMessages}`);
-                    } else {
-                        alert('Oops! There was a problem submitting your form.');
-                    }
+                    const result = await response.json();
+                    alert(result.message || 'Oops! There was a problem submitting your form.');
                 }
             } catch (error) {
                 console.error('Error:', error);
-                if (error.message !== 'Form ID not configured') {
-                    alert('Oops! Something went wrong. Please try again later.');
-                }
+                alert('Oops! Something went wrong. Please try again later.');
             } finally {
                 submitBtn.innerText = originalBtnText;
                 submitBtn.disabled = false;
