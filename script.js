@@ -62,16 +62,64 @@ document.addEventListener('DOMContentLoaded', () => {
     // Contact Form Handler
     const contactForm = document.getElementById('contactForm');
     if (contactForm) {
-        contactForm.addEventListener('submit', (e) => {
+        contactForm.addEventListener('submit', async (e) => {
             e.preventDefault();
-            const name = document.getElementById('name').value;
-            const subject = document.getElementById('subject').value;
-            const message = document.getElementById('message').value;
 
-            const recipients = 'prakashmanthakulla2012@gmail.com,aayushmanthakulla@gmail.com';
-            const mailtoLink = `mailto:${recipients}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent('Name: ' + name + '\n\n' + message)}`;
+            // Get form data
+            const formData = new FormData(contactForm);
+            const data = Object.fromEntries(formData.entries());
 
-            window.location.href = mailtoLink;
+            // Basic validation
+            if (!data.name || !data.email || !data.message) {
+                alert('Please fill in all required fields.');
+                return;
+            }
+
+            const submitBtn = contactForm.querySelector('button[type="submit"]');
+            const originalBtnText = submitBtn.innerText;
+            submitBtn.innerText = 'Sending...';
+            submitBtn.disabled = true;
+
+            try {
+                // REPLACE 'YOUR_FORM_ID' WITH YOUR ACTUAL FORMSPREE FORM ID
+                // Example: 'https://formspree.io/f/xyzaabcd'
+                const formId = 'YOUR_FORM_ID';
+
+                if (formId === 'YOUR_FORM_ID') {
+                    alert('Please configure your Formspree Form ID in script.js to send emails.');
+                    throw new Error('Form ID not configured');
+                }
+
+                const response = await fetch(`https://formspree.io/f/${formId}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                if (response.ok) {
+                    alert('Message sent successfully! Thank you for contacting me.');
+                    contactForm.reset();
+                } else {
+                    const errorData = await response.json();
+                    if (Object.hasOwn(errorData, 'errors')) {
+                        const errorMessages = errorData.errors.map(error => error.message).join(", ");
+                        alert(`Oops! There was a problem submitting your form: ${errorMessages}`);
+                    } else {
+                        alert('Oops! There was a problem submitting your form.');
+                    }
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                if (error.message !== 'Form ID not configured') {
+                    alert('Oops! Something went wrong. Please try again later.');
+                }
+            } finally {
+                submitBtn.innerText = originalBtnText;
+                submitBtn.disabled = false;
+            }
         });
     }
 });
