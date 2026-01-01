@@ -59,56 +59,9 @@ document.addEventListener('DOMContentLoaded', () => {
         observer.observe(el);
     });
 
-    // Contact Form Handler
-    const contactForm = document.getElementById('contactForm');
-    if (contactForm) {
-        contactForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-
-            // Get form data
-            const formData = new FormData(contactForm);
-            const data = Object.fromEntries(formData.entries());
-
-            // Basic validation
-            if (!data.name || !data.email || !data.message) {
-                alert('Please fill in all required fields.');
-                return;
-            }
-
-            const submitBtn = contactForm.querySelector('button[type="submit"]');
-            const originalBtnText = submitBtn.innerText;
-            submitBtn.innerText = 'Sending...';
-            submitBtn.disabled = true;
-
-            try {
-                // FormSubmit.co AJAX endpoint
-                // Note: The specific email destination is included in the URL.
-                const response = await fetch("https://formsubmit.co/ajax/prakashman2012@gmail.com", {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Accept': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        ...data,
-                        _subject: "New Message from Portfolio Contact Form"
-                    })
-                });
-
-                if (response.ok) {
-                    alert('Message sent successfully!');
-                    contactForm.reset();
-                } else {
-                    const result = await response.json();
-                    alert(result.message || 'Oops! There was a problem submitting your form.');
-                }
-            } catch (error) {
-                console.error('Error:', error);
-                alert('Oops! Something went wrong. Please try again later.');
-            } finally {
-                submitBtn.innerText = originalBtnText;
-                submitBtn.disabled = false;
-            }
-        });
-    }
+    // Contact Form Handler - Basic Validation mainly handled by HTML5, 
+    // but nice to have a small check or UI indication if needed.
+    // Since we are using standard POST, we don't strictly need JS here 
+    // unless we want custom validation before submit.
+    // For now, we will rely on browser validation and the form action.
 });
