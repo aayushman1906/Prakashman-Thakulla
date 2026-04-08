@@ -64,4 +64,37 @@ document.addEventListener('DOMContentLoaded', () => {
     // Since we are using standard POST, we don't strictly need JS here 
     // unless we want custom validation before submit.
     // For now, we will rely on browser validation and the form action.
+
+    // Lightbox Logic
+    const galleryItems = document.querySelectorAll('.gallery-item');
+    const lightbox = document.getElementById('lightbox');
+    const lightboxImg = document.getElementById('lightbox-img');
+    const lightboxCaption = document.getElementById('lightbox-caption');
+    const lightboxClose = document.querySelector('.lightbox-close');
+
+    if (galleryItems.length > 0 && lightbox) {
+        galleryItems.forEach(item => {
+            item.addEventListener('click', () => {
+                const img = item.querySelector('img');
+                const text = item.querySelector('.overlay-text').innerText;
+                lightbox.style.display = "block";
+                lightboxImg.src = img.src;
+                lightboxCaption.innerText = text;
+                document.body.style.overflow = 'hidden'; // Prevent background scroll
+            });
+        });
+
+        lightboxClose.addEventListener('click', () => {
+            lightbox.style.display = "none";
+            document.body.style.overflow = 'auto';
+        });
+
+        // Close when clicking outside image
+        lightbox.addEventListener('click', (e) => {
+            if (e.target !== lightboxImg) {
+                lightbox.style.display = "none";
+                document.body.style.overflow = 'auto';
+            }
+        });
+    }
 });
